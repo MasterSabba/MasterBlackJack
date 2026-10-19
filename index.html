@@ -573,12 +573,13 @@
 
       tableBetContainer.classList.add('hidden');
 
-      if (result === 'win' || result === 'blackjack') {
-        const payout = result === 'win' ? currentBet * 2 : Math.floor(currentBet * 2.5);
-        balance += payout;
-        stats.wins++;
+     if (result === 'win' || result === 'blackjack') {
+    const payout = result === 'win' ? currentBet * 2 : Math.floor(currentBet * 2.5);
+    balance += payout;
+    stats.wins++;
 
-        resultTitle.textContent = result === 'blackjack' ? 'BLACKJACK!' : 'VITTORIA!';
+    notifyHubWin(result === 'blackjack' ? 100 : 50);
+    resultTitle.textContent = result === 'blackjack' ? 'BLACKJACK!' : 'VITTORIA!';
         resultTitle.className = 'text-xl md:text-2xl font-black uppercase tracking-wider text-amber-400 drop-shadow';
         resultPayout.textContent = `+${payout - currentBet} $`;
         resultPayout.className = 'text-xs font-bold tracking-widest uppercase text-emerald-400';
@@ -621,6 +622,16 @@
       updateUI();
       checkBankrupt();
     }
+
+function notifyHubWin(pointsAwarded = 50) {
+    const target = window.opener || (window.parent !== window ? window.parent : null);
+    if (target) {
+        target.postMessage({
+            gameKey: 'master-blackjack',
+            points: pointsAwarded
+        }, '*');
+    }
+}
 
     document.getElementById('btn-all-in').addEventListener('click', () => {
       playChipSound();
