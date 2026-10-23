@@ -12,6 +12,7 @@
     /* Sfondo panno verde casinò pulito e morbido */
     body {
       background: radial-gradient(circle at center, #15803d 0%, #032010 85%);
+      <a href="#" onclick="window.close(); return false;" class="exit-button" title="Torna all'Hub">×</a>
     }
 
     /* Animazione distribuzione carta dal mazzo */
@@ -109,8 +110,17 @@
     .gold-glow {
       box-shadow: 0 0 25px rgba(245, 158, 11, 0.35), inset 0 0 15px rgba(251, 191, 36, 0.2);
     }
-  </style>
+    .exit-button {
+            position: absolute; top: 15px; left: 20px; font-size: 2rem; line-height: 1;
+            color: var(--empty-border); text-decoration: none; z-index: 100;
+            transition: all 0.2s ease; -webkit-tap-highlight-color: transparent; font-family: Arial, sans-serif;
+        }
+        .exit-button:hover { color: var(--text-color); transform: scale(1.1); }
+    </style>
 </head>
+
+
+
 <body class="min-h-screen text-white flex flex-col justify-between p-3 md:p-6 select-none font-sans overflow-x-hidden relative">
 
   <!-- MODALE MENU -->
