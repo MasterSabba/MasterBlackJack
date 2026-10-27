@@ -12,7 +12,6 @@
     /* Sfondo panno verde casinò pulito e morbido */
     body {
       background: radial-gradient(circle at center, #15803d 0%, #032010 85%);
-      <a href="#" onclick="window.close(); return false;" class="exit-button" title="Torna all'Hub">×</a>
     }
 
     /* Animazione distribuzione carta dal mazzo */
@@ -111,15 +110,13 @@
       box-shadow: 0 0 25px rgba(245, 158, 11, 0.35), inset 0 0 15px rgba(251, 191, 36, 0.2);
     }
     .exit-button {
-            position: absolute; top: 15px; left: 20px; font-size: 2rem; line-height: 1;
-            color: var(--empty-border); text-decoration: none; z-index: 100;
-            transition: all 0.2s ease; -webkit-tap-highlight-color: transparent; font-family: Arial, sans-serif;
-        }
-        .exit-button:hover { color: var(--text-color); transform: scale(1.1); }
-    </style>
+      position: absolute; top: 15px; left: 20px; font-size: 2rem; line-height: 1;
+      color: #94a3b8; text-decoration: none; z-index: 100;
+      transition: all 0.2s ease; -webkit-tap-highlight-color: transparent; font-family: Arial, sans-serif;
+    }
+    .exit-button:hover { color: #ffffff; transform: scale(1.1); }
+  </style>
 </head>
-
-
 
 <body class="min-h-screen text-white flex flex-col justify-between p-3 md:p-6 select-none font-sans overflow-x-hidden relative">
 
@@ -223,7 +220,7 @@
   <!-- TAVOLO DI GIOCO -->
   <main class="relative flex-1 flex flex-col justify-around items-center max-w-4xl mx-auto w-full my-2">
 
-    <!-- MAZZO E CONTEGGIO CARTE (Alto Destra) -->
+    <!-- MAZZO E CONTEGGIO CARTE -->
     <div class="absolute right-0 top-0 hidden sm:flex flex-col items-center opacity-80 pointer-events-none">
       <div class="flex items-center gap-1.5 bg-[#09351d] px-3 py-1 rounded-lg border border-emerald-700 mb-1">
         <span id="deck-count" class="text-xs font-bold text-emerald-300">52</span>
@@ -240,9 +237,8 @@
       <div id="dealer-cards" class="flex gap-2 min-h-[112px] items-center"></div>
     </div>
 
-    <!-- AREA CENTRALE PUNTATA ED ESITO SPECTACULAR -->
+    <!-- AREA CENTRALE PUNTATA ED ESITO -->
     <div id="center-area" class="flex flex-col items-center justify-center min-h-[120px] z-10">
-      <!-- Pila fiches centrale -->
       <div id="table-bet-container" class="flex flex-col items-center gap-1 transition-all">
         <div id="center-chip-visual" class="poker-chip-center chip-100 w-20 h-20 rounded-full flex flex-col items-center justify-center text-white shadow-2xl relative">
           <span id="table-bet-amount" class="text-xs font-black drop-shadow-md">0 $</span>
@@ -250,7 +246,6 @@
         <span class="text-[9px] uppercase tracking-widest text-emerald-200 font-bold bg-[#09351d] px-2.5 py-0.5 rounded-full border border-emerald-700">Puntata Tavolo</span>
       </div>
 
-      <!-- Banner Risultato Spettacolare per Nuova Mano -->
       <div id="result-box" class="hidden flex flex-col items-center gap-2 bg-gradient-to-b from-[#115e34] to-[#08301a] border-2 border-amber-400/90 px-8 py-5 rounded-3xl shadow-2xl gold-glow animate-pop max-w-xs w-full text-center">
         <h2 id="result-title" class="text-xl md:text-2xl font-black uppercase tracking-wider"></h2>
         <span id="result-payout" class="text-sm font-extrabold tracking-widest uppercase px-3 py-1 rounded-full bg-black/40 border border-white/10"></span>
@@ -270,16 +265,13 @@
     </div>
   </main>
 
-  <!-- PANNELLO DI CONTROLLO INFERIORE MIGLIORATO CON PULSANTI LUMINOSI -->
+  <!-- PANNELLO DI CONTROLLO INFERIORE -->
   <footer class="max-w-4xl mx-auto w-full flex flex-col gap-3 bg-[#0a3a20] p-4 rounded-2xl border border-emerald-600/60 shadow-2xl z-10">
-    
-    <!-- BARRA BANCA / TASTI RAPIDI LUMINOSI -->
     <div class="flex justify-between items-center bg-[#062916] px-4 py-2.5 rounded-xl border border-emerald-700/80">
       <div class="flex items-center gap-2">
         <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider">Banca:</span>
         <span id="balance-display" class="font-black text-amber-400 text-base md:text-lg">$1.000</span>
       </div>
-      <!-- Contenitore pulsanti di gestione puntata (nascosto durante il gioco) -->
       <div id="quick-bet-actions" class="flex gap-2">
         <button id="btn-clear-bet" onclick="clearBet()" class="px-4 py-1.5 btn-action-red text-white font-bold rounded-lg text-xs uppercase transition-all shadow">
           Cancella
@@ -290,11 +282,8 @@
       </div>
     </div>
 
-    <!-- SELETTORE FICHES DINAMICO -->
     <div id="betting-controls" class="flex flex-wrap items-center justify-between gap-3">
-      <div id="chips-container" class="flex flex-wrap gap-2 md:gap-3 items-center justify-center flex-1 my-1">
-        <!-- Renderizzate via JS -->
-      </div>
+      <div id="chips-container" class="flex flex-wrap gap-2 md:gap-3 items-center justify-center flex-1 my-1"></div>
       <div>
         <button id="btn-play" onclick="startGame()" class="px-8 py-3 btn-action-green text-white font-black rounded-xl shadow-xl transition-all disabled:opacity-40 disabled:pointer-events-none text-base tracking-wider flex items-center gap-2">
           GIOCA <i data-lucide="play" class="w-4 h-4 fill-white"></i>
@@ -302,23 +291,27 @@
       </div>
     </div>
 
-    <!-- SEZIONE AZIONI DURANTE LA MANO (Carta / Stai / Raddoppia) -->
     <div id="action-controls" class="hidden flex gap-3 justify-center items-center">
-      <button onclick="hit()" class="flex-1 py-3 btn-action-green text-white font-black rounded-xl shadow-md transition-all text-sm uppercase">
-        Carta
-      </button>
-      <button onclick="stand()" class="flex-1 py-3 btn-action-red text-white font-black rounded-xl shadow-md transition-all text-sm uppercase">
-        Stai 
-      </button>
-      <button onclick="doubleDown()" class="flex-1 py-3 btn-action-gold text-emerald-950 font-black rounded-xl shadow-md transition-all text-sm uppercase">
-        Raddoppia
-      </button>
+      <button onclick="hit()" class="flex-1 py-3 btn-action-green text-white font-black rounded-xl shadow-md transition-all text-sm uppercase">Carta</button>
+      <button onclick="stand()" class="flex-1 py-3 btn-action-red text-white font-black rounded-xl shadow-md transition-all text-sm uppercase">Stai</button>
+      <button onclick="doubleDown()" class="flex-1 py-3 btn-action-gold text-emerald-950 font-black rounded-xl shadow-md transition-all text-sm uppercase">Raddoppia</button>
     </div>
   </footer>
 
   <!-- LOGICA JAVASCRIPT -->
   <script>
     lucide.createIcons();
+
+    // 🟢 FUNZIONE PER NOTIFICARE L'HUB ARCADE
+    function notifyHubWin(pointsAwarded = 50) {
+      const target = window.opener || (window.parent !== window ? window.parent : null);
+      if (target) {
+        target.postMessage({
+          gameKey: 'master-blackjack',
+          points: pointsAwarded
+        }, '*');
+      }
+    }
 
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSound(type) {
@@ -362,7 +355,7 @@
     let deck = [];
     let playerHand = [];
     let dealerHand = [];
-    let currentBet = 0; // INIZIO SUBITO CON 0 $
+    let currentBet = 0;
     let lastChipClass = 'chip-100';
     
     let totalBalance = parseInt(localStorage.getItem('bj_balance')) || 1000;
@@ -391,7 +384,6 @@
     function openRetiro() { retiroModal.classList.remove('hidden'); }
     function closeRetiro() { retiroModal.classList.add('hidden'); }
 
-    // GESTIONE RITIRO / CHIUSURA SESSIONE
     function executeExitSession() {
       closeRetiro();
       try {
@@ -402,7 +394,6 @@
         }
       } catch (e) {}
       
-      // Fallback sicuro se il browser blocca la chiusura
       document.getElementById('exit-final-balance').textContent = `$${totalBalance.toLocaleString()}`;
       exitModal.classList.remove('hidden');
     }
@@ -451,7 +442,6 @@
       updateUI();
     }
 
-    // AGGIORNAMENTO SALDO IMMEDIATO VISUALIZZATO (DISPONIBILE = TOTALBALANCE - CURRENTBET)
     function updateUI() {
       const availableBalance = totalBalance - currentBet;
       balanceDisplay.textContent = `$${availableBalance.toLocaleString()}`;
@@ -538,7 +528,7 @@
       resultBox.classList.add('hidden');
       tableBetContainer.classList.remove('hidden');
       document.getElementById('betting-controls').classList.add('hidden');
-      document.getElementById('quick-bet-actions').classList.add('hidden'); // Nasconde Cancella & ALL-IN durante il gioco
+      document.getElementById('quick-bet-actions').classList.add('hidden');
       document.getElementById('action-controls').classList.add('hidden');
 
       playerCardsEl.innerHTML = '';
@@ -645,6 +635,10 @@
         totalBalance += currentBet + profit;
         totalWins++;
         totalScore += profit;
+        
+        // 🟢 INVIO PUNTI ALL'HUB
+        notifyHubWin(result === 'blackjack' ? 100 : 50);
+
         resultTitle.textContent = result === 'blackjack' ? "BLACKJACK! 🌟" : "HAI VINTO! 🎉";
         resultTitle.className = "text-xl md:text-2xl font-black uppercase tracking-wider text-amber-400 drop-shadow-md";
         resultPayout.textContent = `+${profit} $`;
@@ -669,7 +663,6 @@
       resultBox.classList.remove('hidden');
       updateUI();
 
-      // SE BANCAROTTA: attiva la finestra con il riepilogo
       if (totalBalance <= 0) {
         document.getElementById('sum-wins').textContent = totalWins;
         document.getElementById('sum-peak').textContent = `$${peakBalance.toLocaleString()}`;
@@ -684,12 +677,11 @@
       resultBox.classList.add('hidden');
       tableBetContainer.classList.remove('hidden');
       document.getElementById('betting-controls').classList.remove('hidden');
-      document.getElementById('quick-bet-actions').classList.remove('hidden'); // Mostra nuovamente Cancella & ALL-IN per la puntata
+      document.getElementById('quick-bet-actions').classList.remove('hidden');
       currentBet = 0;
       updateUI();
     }
 
-    // INIZIALIZZAZIONE CON PUNTATA 0 $
     currentBet = 0;
     updateUI();
   </script>
