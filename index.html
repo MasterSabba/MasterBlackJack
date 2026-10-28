@@ -20,7 +20,7 @@
       100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
     }
     .animate-new-card {
-      animation: dealFromDeck 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      animation: dealFromDeck 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     }
 
     /* Stili Fiches VIP Multicolore Luminose */
@@ -64,6 +64,21 @@
       animation: fadeInScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
+    /* Nuove animazioni per Risultati (Vittoria / Sconfitta) */
+    @keyframes resultBounce {
+      0% { transform: scale(0.4) translateY(30px); opacity: 0; }
+      70% { transform: scale(1.08) translateY(-5px); opacity: 1; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .result-anim-win {
+      animation: resultBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      box-shadow: 0 0 35px rgba(251, 191, 36, 0.5), inset 0 0 20px rgba(251, 191, 36, 0.25);
+    }
+    .result-anim-loss {
+      animation: resultBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      box-shadow: 0 0 35px rgba(239, 68, 68, 0.5), inset 0 0 20px rgba(239, 68, 68, 0.25);
+    }
+
     /* Pulsanti d'azione Brillanti e LUMINOSI */
     .btn-action-green {
       background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
@@ -105,10 +120,29 @@
       transform: translateY(-1px);
     }
 
-    /* Glow gold per banner Nuova Mano */
-    .gold-glow {
-      box-shadow: 0 0 25px rgba(245, 158, 11, 0.35), inset 0 0 15px rgba(251, 191, 36, 0.2);
+    .btn-action-purple {
+      background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
+      border: 1px solid #e9d5ff;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
     }
+    .btn-action-purple:hover {
+      background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+      transform: translateY(-1px);
+    }
+
+    /* Tavolo in feltro più luminoso e meno scuro */
+    .felt-table {
+      background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+      border: 3px solid rgba(134, 239, 172, 0.4);
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4), 0 15px 35px rgba(0, 0, 0, 0.5);
+      border-radius: 2.5rem;
+    }
+
+    .hand-active-glow {
+      border: 2px solid #fbbf24 !important;
+      box-shadow: 0 0 15px rgba(251, 191, 36, 0.5) !important;
+    }
+
     .exit-button {
       position: absolute; top: 15px; left: 20px; font-size: 2rem; line-height: 1;
       color: #94a3b8; text-decoration: none; z-index: 100;
@@ -118,7 +152,7 @@
   </style>
 </head>
 
-<body class="min-h-screen text-white flex flex-col justify-between p-3 md:p-6 select-none font-sans overflow-x-hidden relative">
+<body class="min-h-screen text-white flex flex-col justify-between p-3 md:p-5 select-none font-sans overflow-x-hidden relative">
 
   <!-- MODALE MENU -->
   <div id="menu-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -172,36 +206,37 @@
     </div>
   </div>
 
-  <!-- MODALE BANCAROTTA CON RIEPILOGO COMPLETO VIP -->
-  <div id="bankrupt-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-gradient-to-b from-black via-[#2a080c] to-[#0a3a20] border-2 border-rose-600 max-w-md w-full p-6 md:p-8 rounded-3xl shadow-2xl text-center flex flex-col gap-4 modal-animate">
-      <div class="w-16 h-16 bg-rose-950/80 rounded-full flex items-center justify-center border-2 border-rose-500 shadow-xl mx-auto">
-        <i data-lucide="skull" class="w-8 h-8 text-rose-400"></i>
+  <!-- MODALE BANCAROTTA MIGLIORATA -->
+  <div id="bankrupt-modal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-lg z-50 flex items-center justify-center p-4">
+    <div class="bg-gradient-to-b from-[#180306] via-[#100103] to-[#041a0e] border-2 border-rose-500 max-w-md w-full p-6 md:p-8 rounded-3xl shadow-[0_0_50px_rgba(244,63,94,0.3)] text-center flex flex-col gap-5 modal-animate">
+      <div class="w-20 h-20 bg-rose-900/40 rounded-full flex items-center justify-center border-2 border-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.6)] mx-auto animate-bounce">
+        <i data-lucide="skull" class="w-10 h-10 text-rose-400"></i>
       </div>
-      <h2 class="text-2xl md:text-3xl font-black text-rose-500 uppercase tracking-wide">Bancarotta VIP</h2>
-      <p class="text-xs text-rose-200">Hai azzerato i tuoi crediti. Ecco il resoconto completo della sessione:</p>
-
-      <!-- Tabella Statistiche Sessione VIP -->
-      <div class="bg-[#0d1f15] border border-emerald-700/60 rounded-2xl p-4 flex flex-col gap-2.5 text-xs text-emerald-200 shadow-inner">
-        <div class="flex justify-between border-b border-emerald-800/60 pb-1.5">
-          <span class="font-semibold text-emerald-300">Mani Vinte:</span>
-          <span id="sum-wins" class="font-black text-white">0</span>
-        </div>
-        <div class="flex justify-between border-b border-emerald-800/60 pb-1.5">
-          <span class="font-semibold text-emerald-300">Banca Più Alta:</span>
-          <span id="sum-peak" class="font-black text-amber-400">$1.000</span>
-        </div>
-        <div class="flex justify-between border-b border-emerald-800/60 pb-1.5">
-          <span class="font-semibold text-emerald-300">Livello Raggiunto:</span>
-          <span id="sum-level" class="font-black text-amber-300">Base</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="font-semibold text-emerald-300">Punteggio Totale:</span>
-          <span id="sum-score" class="font-black text-white">0</span>
-        </div>
+      <div>
+        <h2 class="text-2xl md:text-3xl font-black text-rose-500 uppercase tracking-widest drop-shadow">Bancarotta VIP</h2>
+        <p class="text-xs text-rose-300/80 mt-1">Il bancomat si è svuotato. Ecco il resoconto completo della sessione:</p>
       </div>
 
-      <button onclick="refillBank()" class="mt-2 w-full py-3.5 btn-action-gold text-emerald-950 font-black rounded-xl shadow-xl transition-all text-base tracking-wide flex items-center justify-center gap-2">
+      <div class="bg-black/60 border border-rose-900/60 rounded-2xl p-4 flex flex-col gap-3 text-xs text-rose-100 shadow-inner">
+        <div class="flex justify-between items-center border-b border-rose-950 pb-2">
+          <span class="font-semibold text-rose-300">Mani Vinte:</span>
+          <span id="sum-wins" class="font-black text-white text-sm">0</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-rose-950 pb-2">
+          <span class="font-semibold text-rose-300">Banca Più Alta:</span>
+          <span id="sum-peak" class="font-black text-amber-400 text-sm">$1.000</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-rose-950 pb-2">
+          <span class="font-semibold text-rose-300">Livello Raggiunto:</span>
+          <span id="sum-level" class="font-black text-amber-300 text-sm">Base</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="font-semibold text-rose-300">Punteggio Totale:</span>
+          <span id="sum-score" class="font-black text-white text-sm">0</span>
+        </div>
+      </div>
+
+      <button onclick="refillBank()" class="w-full py-4 btn-action-gold text-emerald-950 font-black rounded-xl shadow-2xl transition-all text-base tracking-wider flex items-center justify-center gap-2">
         <i data-lucide="banknote" class="w-5 h-5"></i> Ricarica Bancomat (+1.000 $)
       </button>
     </div>
@@ -217,36 +252,36 @@
     </button>
   </header>
 
-  <!-- TAVOLO DI GIOCO -->
-  <main class="relative flex-1 flex flex-col justify-around items-center max-w-4xl mx-auto w-full my-2">
+  <!-- TAVOLO DI GIOCO FELTRO VIP PIU' CHIARO -->
+  <main class="felt-table relative flex-1 flex flex-col justify-around items-center max-w-4xl mx-auto w-full my-3 p-4 md:p-6">
 
     <!-- MAZZO E CONTEGGIO CARTE -->
-    <div class="absolute right-0 top-0 hidden sm:flex flex-col items-center opacity-80 pointer-events-none">
-      <div class="flex items-center gap-1.5 bg-[#09351d] px-3 py-1 rounded-lg border border-emerald-700 mb-1">
-        <span id="deck-count" class="text-xs font-bold text-emerald-300">52</span>
-        <i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-400"></i>
+    <div class="absolute right-4 top-4 hidden sm:flex flex-col items-center opacity-90 pointer-events-none">
+      <div class="flex items-center gap-1.5 bg-[#14532d] px-3 py-1 rounded-lg border border-emerald-500/50 mb-1">
+        <span id="deck-count" class="text-xs font-bold text-emerald-200">52</span>
+        <i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-300"></i>
       </div>
     </div>
 
     <!-- AREA DEALER / BANCO -->
-    <div class="flex flex-col items-center gap-1 z-10">
+    <div class="flex flex-col items-center gap-1.5 z-10">
       <div id="dealer-status-tag" class="hidden text-[10px] font-black tracking-widest uppercase px-3 py-0.5 rounded-full shadow"></div>
-      <span class="text-xs font-bold text-emerald-200 tracking-widest uppercase">
-        Banco <span id="dealer-score" class="bg-[#09351d] px-2 py-0.5 rounded border border-emerald-700 ml-1">0</span>
+      <span class="text-xs font-bold text-emerald-100 tracking-widest uppercase">
+        Banco <span id="dealer-score" class="bg-[#14532d] px-2.5 py-0.5 rounded-md border border-emerald-500/50 ml-1">0</span>
       </span>
       <div id="dealer-cards" class="flex gap-2 min-h-[112px] items-center"></div>
     </div>
 
-    <!-- AREA CENTRALE PUNTATA ED ESITO -->
-    <div id="center-area" class="flex flex-col items-center justify-center min-h-[120px] z-10">
+    <!-- AREA CENTRALE PUNTATA ED ESITO CON ANIMAZIONI MIGLIORATE -->
+    <div id="center-area" class="flex flex-col items-center justify-center min-h-[120px] z-10 my-2">
       <div id="table-bet-container" class="flex flex-col items-center gap-1 transition-all">
         <div id="center-chip-visual" class="poker-chip-center chip-100 w-20 h-20 rounded-full flex flex-col items-center justify-center text-white shadow-2xl relative">
           <span id="table-bet-amount" class="text-xs font-black drop-shadow-md">0 $</span>
         </div>
-        <span class="text-[9px] uppercase tracking-widest text-emerald-200 font-bold bg-[#09351d] px-2.5 py-0.5 rounded-full border border-emerald-700">Puntata Tavolo</span>
+        <span class="text-[9px] uppercase tracking-widest text-emerald-100 font-bold bg-[#14532d] px-2.5 py-0.5 rounded-full border border-emerald-500/50">Puntata Tavolo</span>
       </div>
 
-      <div id="result-box" class="hidden flex flex-col items-center gap-2 bg-gradient-to-b from-[#115e34] to-[#08301a] border-2 border-amber-400/90 px-8 py-5 rounded-3xl shadow-2xl gold-glow animate-pop max-w-xs w-full text-center">
+      <div id="result-box" class="hidden flex flex-col items-center gap-2 bg-gradient-to-b from-[#15803d] to-[#0d5028] border-2 border-amber-400 px-8 py-4 rounded-3xl shadow-2xl max-w-xs w-full text-center">
         <h2 id="result-title" class="text-xl md:text-2xl font-black uppercase tracking-wider"></h2>
         <span id="result-payout" class="text-sm font-extrabold tracking-widest uppercase px-3 py-1 rounded-full bg-black/40 border border-white/10"></span>
         <button id="btn-new-hand" onclick="resetForNewHand()" class="mt-2 w-full py-3 btn-action-gold text-emerald-950 font-black rounded-xl shadow-xl transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-1.5">
@@ -256,20 +291,34 @@
     </div>
 
     <!-- AREA GIOCATORE -->
-    <div class="flex flex-col items-center gap-1 z-10">
-      <div id="player-cards" class="flex gap-2 min-h-[112px] items-center"></div>
-      <span class="text-xs font-bold text-emerald-200 tracking-widest uppercase">
-        Giocatore <span id="player-score" class="bg-[#09351d] px-2 py-0.5 rounded border border-emerald-700 ml-1">0</span>
-      </span>
-      <div id="player-status-tag" class="hidden text-[10px] font-black tracking-widest uppercase px-3 py-0.5 rounded-full shadow"></div>
+    <div class="flex flex-col items-center gap-2 z-10 w-full">
+      <div id="player-hands-container" class="flex justify-center gap-6 w-full">
+        <!-- Mano 1 -->
+        <div id="hand-0" class="flex flex-col items-center gap-1 p-2 rounded-2xl transition-all">
+          <span id="hand-0-label" class="hidden text-[10px] font-extrabold text-amber-300 uppercase tracking-wider">Mano 1</span>
+          <div id="player-cards-0" class="flex gap-2 min-h-[112px] items-center"></div>
+          <span class="text-xs font-bold text-emerald-100 tracking-widest uppercase">
+            Giocatore <span id="player-score-0" class="bg-[#14532d] px-2 py-0.5 rounded border border-emerald-500/50 ml-1">0</span>
+          </span>
+        </div>
+
+        <!-- Mano 2 (Split) -->
+        <div id="hand-1" class="hidden flex-col items-center gap-1 p-2 rounded-2xl transition-all">
+          <span class="text-[10px] font-extrabold text-amber-300 uppercase tracking-wider">Mano 2</span>
+          <div id="player-cards-1" class="flex gap-2 min-h-[112px] items-center"></div>
+          <span class="text-xs font-bold text-emerald-100 tracking-widest uppercase">
+            Punti <span id="player-score-1" class="bg-[#14532d] px-2 py-0.5 rounded border border-emerald-500/50 ml-1">0</span>
+          </span>
+        </div>
+      </div>
     </div>
   </main>
 
   <!-- PANNELLO DI CONTROLLO INFERIORE -->
-  <footer class="max-w-4xl mx-auto w-full flex flex-col gap-3 bg-[#0a3a20] p-4 rounded-2xl border border-emerald-600/60 shadow-2xl z-10">
-    <div class="flex justify-between items-center bg-[#062916] px-4 py-2.5 rounded-xl border border-emerald-700/80">
+  <footer class="max-w-4xl mx-auto w-full flex flex-col gap-3 bg-[#0f4d2a] p-4 rounded-2xl border border-emerald-500/40 shadow-2xl z-10">
+    <div class="flex justify-between items-center bg-[#09351d] px-4 py-2.5 rounded-xl border border-emerald-700/80">
       <div class="flex items-center gap-2">
-        <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider">Banca:</span>
+        <span class="text-xs font-bold text-emerald-200 uppercase tracking-wider">Banca:</span>
         <span id="balance-display" class="font-black text-amber-400 text-base md:text-lg">$1.000</span>
       </div>
       <div id="quick-bet-actions" class="flex gap-2">
@@ -282,6 +331,7 @@
       </div>
     </div>
 
+    <!-- PUNTATE & CHIPS -->
     <div id="betting-controls" class="flex flex-wrap items-center justify-between gap-3">
       <div id="chips-container" class="flex flex-wrap gap-2 md:gap-3 items-center justify-center flex-1 my-1"></div>
       <div>
@@ -291,10 +341,13 @@
       </div>
     </div>
 
-    <div id="action-controls" class="hidden flex gap-3 justify-center items-center">
-      <button onclick="hit()" class="flex-1 py-3 btn-action-green text-white font-black rounded-xl shadow-md transition-all text-sm uppercase">Carta</button>
-      <button onclick="stand()" class="flex-1 py-3 btn-action-red text-white font-black rounded-xl shadow-md transition-all text-sm uppercase">Stai</button>
-      <button onclick="doubleDown()" class="flex-1 py-3 btn-action-gold text-emerald-950 font-black rounded-xl shadow-md transition-all text-sm uppercase">Raddoppia</button>
+    <!-- CONTROLLI AZIONE GIOCATORE -->
+    <div id="action-controls" class="hidden flex flex-wrap gap-2 md:gap-3 justify-center items-center">
+      <button onclick="hit()" class="flex-1 py-3 px-4 btn-action-green text-white font-black rounded-xl shadow-md transition-all text-xs md:text-sm uppercase min-w-[80px]">Carta</button>
+      <button onclick="stand()" class="flex-1 py-3 px-4 btn-action-red text-white font-black rounded-xl shadow-md transition-all text-xs md:text-sm uppercase min-w-[80px]">Stai</button>
+      <button id="btn-double" onclick="doubleDown()" class="flex-1 py-3 px-4 btn-action-gold text-emerald-950 font-black rounded-xl shadow-md transition-all text-xs md:text-sm uppercase min-w-[90px]">Raddoppia</button>
+      <button id="btn-split" onclick="splitHand()" class="hidden flex-1 py-3 px-4 btn-action-purple text-white font-black rounded-xl shadow-md transition-all text-xs md:text-sm uppercase min-w-[80px]">Split ✂️</button>
+      <button id="btn-insurance" onclick="buyInsurance()" class="hidden flex-1 py-3 px-4 btn-action-blue text-white font-black rounded-xl shadow-md transition-all text-xs md:text-sm uppercase min-w-[110px]">Assicurazione 🛡️</button>
     </div>
   </footer>
 
@@ -302,7 +355,6 @@
   <script>
     lucide.createIcons();
 
-    // 🟢 FUNZIONE PER NOTIFICARE L'HUB ARCADE
     function notifyHubWin(pointsAwarded = 50) {
       const target = window.opener || (window.parent !== window ? window.parent : null);
       if (target) {
@@ -353,7 +405,12 @@
     const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
     
     let deck = [];
-    let playerHand = [];
+    let playerHands = [[]];
+    let currentHandIndex = 0;
+    let handBets = [0];
+    let isSplit = false;
+    let insuranceBet = 0;
+    
     let dealerHand = [];
     let currentBet = 0;
     let lastChipClass = 'chip-100';
@@ -368,9 +425,7 @@
     const centerChipVisual = document.getElementById('center-chip-visual');
     const tableBetContainer = document.getElementById('table-bet-container');
     const dealerCardsEl = document.getElementById('dealer-cards');
-    const playerCardsEl = document.getElementById('player-cards');
     const dealerScoreEl = document.getElementById('dealer-score');
-    const playerScoreEl = document.getElementById('player-score');
     const resultBox = document.getElementById('result-box');
     const resultTitle = document.getElementById('result-title');
     const resultPayout = document.getElementById('result-payout');
@@ -386,14 +441,6 @@
 
     function executeExitSession() {
       closeRetiro();
-      try {
-        if (window.history.length > 1) {
-          window.history.back();
-        } else {
-          window.close();
-        }
-      } catch (e) {}
-      
       document.getElementById('exit-final-balance').textContent = `$${totalBalance.toLocaleString()}`;
       exitModal.classList.remove('hidden');
     }
@@ -414,7 +461,7 @@
       ALL_CHIPS.forEach(chip => {
         if (chip.value <= availableBalance) {
           const btn = document.createElement('button');
-          btn.className = `chip-btn ${chip.class} w-11 h-11 md:w-12 md:h-12 rounded-full font-bold flex items-center justify-center cursor-pointer relative shadow-lg`;
+          btn.className = `chip-btn ${chip.class} w-10 h-10 md:w-12 md:h-12 rounded-full font-bold flex items-center justify-center cursor-pointer relative shadow-lg`;
           btn.innerHTML = `<span class="text-xs font-black drop-shadow">${chip.value >= 1000 ? (chip.value/1000) + 'k' : chip.value}</span>`;
           btn.onclick = () => {
             playSound('chip');
@@ -496,14 +543,14 @@
       const anim = isNew ? 'animate-new-card' : '';
 
       if (!card.faceUp) {
-        div.className = `w-20 h-28 bg-gradient-to-br from-blue-900 to-indigo-950 border-2 border-amber-400/50 rounded-xl shadow-xl flex items-center justify-center ${anim}`;
-        div.innerHTML = `<div class="w-16 h-24 border border-blue-700/50 rounded-lg bg-blue-950/80 flex items-center justify-center"><span class="text-amber-400 font-black text-sm tracking-widest">BJ</span></div>`;
+        div.className = `w-16 h-24 md:w-20 md:h-28 bg-gradient-to-br from-blue-900 to-indigo-950 border-2 border-amber-400/50 rounded-xl shadow-xl flex items-center justify-center ${anim}`;
+        div.innerHTML = `<div class="w-12 h-20 md:w-16 md:h-24 border border-blue-700/50 rounded-lg bg-blue-950/80 flex items-center justify-center"><span class="text-amber-400 font-black text-xs md:text-sm tracking-widest">BJ</span></div>`;
       } else {
-        div.className = `w-20 h-28 bg-gradient-to-b from-white to-gray-100 border border-gray-300 rounded-xl shadow-xl flex flex-col justify-between p-2 select-none ${anim}`;
+        div.className = `w-16 h-24 md:w-20 md:h-28 bg-gradient-to-b from-white to-gray-100 border border-gray-300 rounded-xl shadow-xl flex flex-col justify-between p-1.5 md:p-2 select-none ${anim}`;
         div.innerHTML = `
-          <div class="text-sm font-extrabold ${isRed ? 'text-red-600' : 'text-gray-900'}">${card.rank}</div>
-          <div class="text-3xl text-center leading-none ${isRed ? 'text-red-600' : 'text-gray-900'}">${symbols[card.suit]}</div>
-          <div class="text-sm font-extrabold text-right rotate-180 ${isRed ? 'text-red-600' : 'text-gray-900'}">${card.rank}</div>`;
+          <div class="text-xs md:text-sm font-extrabold ${isRed ? 'text-red-600' : 'text-gray-900'}">${card.rank}</div>
+          <div class="text-2xl md:text-3xl text-center leading-none ${isRed ? 'text-red-600' : 'text-gray-900'}">${symbols[card.suit]}</div>
+          <div class="text-xs md:text-sm font-extrabold text-right rotate-180 ${isRed ? 'text-red-600' : 'text-gray-900'}">${card.rank}</div>`;
       }
       return div;
     }
@@ -512,7 +559,10 @@
 
     function resetTags() {
       document.getElementById('dealer-status-tag').className = 'hidden';
-      document.getElementById('player-status-tag').className = 'hidden';
+      document.getElementById('hand-0').classList.remove('hand-active-glow');
+      document.getElementById('hand-1').classList.remove('hand-active-glow');
+      document.getElementById('hand-1').classList.add('hidden');
+      document.getElementById('hand-0-label').classList.add('hidden');
     }
 
     async function startGame() {
@@ -521,36 +571,42 @@
       updateUI();
 
       deck = createDeck();
-      playerHand = [];
+      playerHands = [[]];
+      currentHandIndex = 0;
+      handBets = [currentBet];
+      isSplit = false;
+      insuranceBet = 0;
       dealerHand = [];
 
       resetTags();
+      document.getElementById('btn-split').classList.add('hidden');
+      document.getElementById('btn-insurance').classList.add('hidden');
       resultBox.classList.add('hidden');
       tableBetContainer.classList.remove('hidden');
       document.getElementById('betting-controls').classList.add('hidden');
       document.getElementById('quick-bet-actions').classList.add('hidden');
-      document.getElementById('action-controls').classList.add('hidden');
 
-      playerCardsEl.innerHTML = '';
+      document.getElementById('player-cards-0').innerHTML = '';
+      document.getElementById('player-cards-1').innerHTML = '';
       dealerCardsEl.innerHTML = '';
 
       playSound('card');
-      playerHand.push(deck.pop());
-      playerCardsEl.appendChild(renderCardDOM(playerHand[0], true));
-      playerScoreEl.textContent = calculateValue(playerHand);
-      await delay(450);
+      playerHands[0].push(deck.pop());
+      document.getElementById('player-cards-0').appendChild(renderCardDOM(playerHands[0][0], true));
+      document.getElementById('player-score-0').textContent = calculateValue(playerHands[0]);
+      await delay(400);
 
       playSound('card');
       dealerHand.push(deck.pop());
       dealerCardsEl.appendChild(renderCardDOM(dealerHand[0], true));
       dealerScoreEl.textContent = calculateValue(dealerHand);
-      await delay(450);
+      await delay(400);
 
       playSound('card');
-      playerHand.push(deck.pop());
-      playerCardsEl.appendChild(renderCardDOM(playerHand[1], true));
-      playerScoreEl.textContent = calculateValue(playerHand);
-      await delay(450);
+      playerHands[0].push(deck.pop());
+      document.getElementById('player-cards-0').appendChild(renderCardDOM(playerHands[0][1], true));
+      document.getElementById('player-score-0').textContent = calculateValue(playerHands[0]);
+      await delay(400);
 
       playSound('card');
       dealerHand.push({ ...deck.pop(), faceUp: false });
@@ -558,25 +614,91 @@
 
       document.getElementById('action-controls').classList.remove('hidden');
 
-      if (calculateValue(playerHand) === 21) {
+      if (playerHands[0][0].value === playerHands[0][1].value && totalBalance >= currentBet) {
+        document.getElementById('btn-split').classList.remove('hidden');
+      }
+
+      if (dealerHand[0].rank === 'A' && totalBalance >= Math.floor(currentBet / 2)) {
+        document.getElementById('btn-insurance').classList.remove('hidden');
+      }
+
+      if (calculateValue(playerHands[0]) === 21) {
         endGame('blackjack');
       }
+    }
+
+    async function splitHand() {
+      if (totalBalance < handBets[0]) return alert("Saldo insufficiente per splittare!");
+      
+      totalBalance -= handBets[0];
+      handBets.push(handBets[0]);
+      isSplit = true;
+
+      document.getElementById('btn-split').classList.add('hidden');
+      document.getElementById('hand-1').classList.remove('hidden');
+      document.getElementById('hand-1').classList.flex = "flex";
+      document.getElementById('hand-0-label').classList.remove('hidden');
+
+      const secondCard = playerHands[0].pop();
+      playerHands.push([secondCard]);
+
+      playerHands[0].push(deck.pop());
+      playerHands[1].push(deck.pop());
+
+      document.getElementById('player-cards-0').innerHTML = '';
+      playerHands[0].forEach(c => document.getElementById('player-cards-0').appendChild(renderCardDOM(c, false)));
+      document.getElementById('player-score-0').textContent = calculateValue(playerHands[0]);
+
+      document.getElementById('player-cards-1').innerHTML = '';
+      playerHands[1].forEach(c => document.getElementById('player-cards-1').appendChild(renderCardDOM(c, false)));
+      document.getElementById('player-score-1').textContent = calculateValue(playerHands[1]);
+
+      currentHandIndex = 0;
+      document.getElementById('hand-0').classList.add('hand-active-glow');
+      updateUI();
+    }
+
+    function buyInsurance() {
+      const cost = Math.floor(handBets[0] / 2);
+      if (totalBalance < cost) return alert("Saldo insufficiente per l'assicurazione!");
+      totalBalance -= cost;
+      insuranceBet = cost;
+      document.getElementById('btn-insurance').classList.add('hidden');
+      alert(`Assicurazione acquistata per $${cost}!`);
+      updateUI();
     }
 
     async function hit() {
       playSound('card');
       const card = deck.pop();
-      playerHand.push(card);
-      playerCardsEl.appendChild(renderCardDOM(card, true));
-      playerScoreEl.textContent = calculateValue(playerHand);
+      playerHands[currentHandIndex].push(card);
 
-      if (calculateValue(playerHand) > 21) {
+      const targetEl = document.getElementById(`player-cards-${currentHandIndex}`);
+      targetEl.appendChild(renderCardDOM(card, true));
+      document.getElementById(`player-score-${currentHandIndex}`).textContent = calculateValue(playerHands[currentHandIndex]);
+
+      if (calculateValue(playerHands[currentHandIndex]) > 21) {
         await delay(350);
-        endGame('loss');
+        if (isSplit && currentHandIndex === 0) {
+          moveToNextHand();
+        } else {
+          stand();
+        }
       }
     }
 
+    function moveToNextHand() {
+      document.getElementById('hand-0').classList.remove('hand-active-glow');
+      currentHandIndex = 1;
+      document.getElementById('hand-1').classList.add('hand-active-glow');
+    }
+
     async function stand() {
+      if (isSplit && currentHandIndex === 0) {
+        moveToNextHand();
+        return;
+      }
+
       document.getElementById('action-controls').classList.add('hidden');
       dealerHand[1].faceUp = true;
       dealerCardsEl.children[1].replaceWith(renderCardDOM(dealerHand[1], false));
@@ -592,31 +714,101 @@
         await delay(500);
       }
 
-      const pVal = calculateValue(playerHand);
-      const dVal = calculateValue(dealerHand);
-
-      if (dVal > 21 || pVal > dVal) endGame('win');
-      else if (pVal < dVal) endGame('loss');
-      else endGame('push');
+      evaluateAllResults();
     }
 
     async function doubleDown() {
-      if (totalBalance < currentBet) return alert('Saldo insufficiente per raddoppiare!');
-      totalBalance -= currentBet;
-      currentBet *= 2;
+      const activeBet = handBets[currentHandIndex];
+      if (totalBalance < activeBet) return alert('Saldo insufficiente per raddoppiare!');
+      
+      totalBalance -= activeBet;
+      handBets[currentHandIndex] *= 2;
       updateUI();
 
       playSound('card');
       const card = deck.pop();
-      playerHand.push(card);
-      playerCardsEl.appendChild(renderCardDOM(card, true));
-      playerScoreEl.textContent = calculateValue(playerHand);
+      playerHands[currentHandIndex].push(card);
+      document.getElementById(`player-cards-${currentHandIndex}`).appendChild(renderCardDOM(card, true));
+      document.getElementById(`player-score-${currentHandIndex}`).textContent = calculateValue(playerHands[currentHandIndex]);
       await delay(450);
 
-      if (calculateValue(playerHand) > 21) {
-        endGame('loss');
+      if (isSplit && currentHandIndex === 0) {
+        moveToNextHand();
       } else {
         stand();
+      }
+    }
+
+    function evaluateAllResults() {
+      const dVal = calculateValue(dealerHand);
+      let totalProfit = 0;
+      let winsCount = 0;
+      let lossesCount = 0;
+
+      if (insuranceBet > 0 && dealerHand[0].value + (dealerHand[1].rank === 'A' ? 11 : dealerHand[1].value) === 21) {
+        totalProfit += insuranceBet * 3;
+      }
+
+      playerHands.forEach((hand, idx) => {
+        const pVal = calculateValue(hand);
+        const bet = handBets[idx];
+
+        if (pVal > 21) {
+          lossesCount++;
+        } else if (dVal > 21 || pVal > dVal) {
+          totalProfit += bet * 2;
+          winsCount++;
+        } else if (pVal === dVal) {
+          totalProfit += bet;
+        } else {
+          lossesCount++;
+        }
+      });
+
+      totalBalance += totalProfit;
+      if (winsCount > 0) {
+        totalWins += winsCount;
+        totalScore += totalProfit;
+        notifyHubWin(50 * winsCount);
+      }
+
+      tableBetContainer.classList.add('hidden');
+
+      // Animazioni migliorate applicate al box esito
+      resultBox.className = "hidden flex flex-col items-center gap-2 border-2 px-8 py-5 rounded-3xl shadow-2xl max-w-xs w-full text-center";
+
+      if (winsCount > lossesCount) {
+        resultBox.classList.add('result-anim-win', 'border-amber-400', 'bg-gradient-to-b', 'from-[#16a34a]', 'to-[#0d5028]');
+        resultTitle.textContent = "HAI VINTO! 🎉";
+        resultTitle.className = "text-xl md:text-2xl font-black uppercase tracking-wider text-amber-400 drop-shadow-md";
+        resultPayout.textContent = `+$${totalProfit}`;
+        resultPayout.className = "text-sm font-extrabold tracking-widest uppercase text-emerald-300 bg-emerald-950/60 border border-emerald-500/30 px-4 py-1 rounded-full";
+      } else if (lossesCount > winsCount) {
+        resultBox.classList.add('result-anim-loss', 'border-rose-500', 'bg-gradient-to-b', 'from-[#991b1b]', 'to-[#450a0a]');
+        resultTitle.textContent = "HAI PERSO 😢";
+        resultTitle.className = "text-xl md:text-2xl font-black uppercase tracking-wider text-rose-300 drop-shadow-md";
+        resultPayout.textContent = `-$${handBets.reduce((a,b)=>a+b, 0)}`;
+        resultPayout.className = "text-sm font-extrabold tracking-widest uppercase text-rose-200 bg-rose-950/60 border border-rose-500/30 px-4 py-1 rounded-full";
+      } else {
+        resultBox.classList.add('result-anim-win', 'border-amber-300', 'bg-gradient-to-b', 'from-[#15803d]', 'to-[#09351d]');
+        resultTitle.textContent = "PAREGGIO 🤝";
+        resultTitle.className = "text-xl md:text-2xl font-black uppercase tracking-wider text-amber-200 drop-shadow-md";
+        resultPayout.textContent = "+$0";
+        resultPayout.className = "text-sm font-extrabold tracking-widest uppercase text-amber-100 bg-amber-950/60 border border-amber-500/30 px-4 py-1 rounded-full";
+      }
+
+      localStorage.setItem('bj_wins', totalWins);
+      localStorage.setItem('bj_score', totalScore);
+
+      resultBox.classList.remove('hidden');
+      updateUI();
+
+      if (totalBalance <= 0) {
+        document.getElementById('sum-wins').textContent = totalWins;
+        document.getElementById('sum-peak').textContent = `$${peakBalance.toLocaleString()}`;
+        document.getElementById('sum-level').textContent = totalWins >= 5 ? "VIP Pro" : "Base";
+        document.getElementById('sum-score').textContent = totalScore.toLocaleString();
+        bankruptModal.classList.remove('hidden');
       }
     }
 
@@ -629,32 +821,27 @@
 
       tableBetContainer.classList.add('hidden');
 
+      resultBox.className = "hidden flex flex-col items-center gap-2 border-2 px-8 py-5 rounded-3xl shadow-2xl max-w-xs w-full text-center";
+
       let profit = 0;
-      if (result === 'win' || result === 'blackjack') {
-        profit = result === 'blackjack' ? Math.floor(currentBet * 1.5) : currentBet;
+      if (result === 'blackjack') {
+        profit = Math.floor(currentBet * 1.5);
         totalBalance += currentBet + profit;
         totalWins++;
         totalScore += profit;
-        
-        // 🟢 INVIO PUNTI ALL'HUB
-        notifyHubWin(result === 'blackjack' ? 100 : 50);
+        notifyHubWin(100);
 
-        resultTitle.textContent = result === 'blackjack' ? "BLACKJACK! 🌟" : "HAI VINTO! 🎉";
+        resultBox.classList.add('result-anim-win', 'border-amber-400', 'bg-gradient-to-b', 'from-[#16a34a]', 'to-[#0d5028]');
+        resultTitle.textContent = "BLACKJACK! 🌟";
         resultTitle.className = "text-xl md:text-2xl font-black uppercase tracking-wider text-amber-400 drop-shadow-md";
         resultPayout.textContent = `+${profit} $`;
-        resultPayout.className = "text-sm font-extrabold tracking-widest uppercase text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-4 py-1 rounded-full";
-      } else if (result === 'loss') {
-        profit = -currentBet;
-        resultTitle.textContent = "HAI PERSO 😢";
-        resultTitle.className = "text-xl md:text-2xl font-black uppercase tracking-wider text-rose-400 drop-shadow-md";
-        resultPayout.textContent = `-${currentBet} $`;
-        resultPayout.className = "text-sm font-extrabold tracking-widest uppercase text-rose-300 bg-rose-950/60 border border-rose-500/30 px-4 py-1 rounded-full";
+        resultPayout.className = "text-sm font-extrabold tracking-widest uppercase text-emerald-300 bg-emerald-950/60 border border-emerald-500/30 px-4 py-1 rounded-full";
       } else {
-        totalBalance += currentBet;
-        resultTitle.textContent = "PAREGGIO 🤝";
-        resultTitle.className = "text-xl md:text-2xl font-black uppercase tracking-wider text-amber-300 drop-shadow-md";
-        resultPayout.textContent = "+0 $";
-        resultPayout.className = "text-sm font-extrabold tracking-widest uppercase text-amber-200 bg-amber-950/60 border border-amber-500/30 px-4 py-1 rounded-full";
+        resultBox.classList.add('result-anim-loss', 'border-rose-500', 'bg-gradient-to-b', 'from-[#991b1b]', 'to-[#450a0a]');
+        resultTitle.textContent = "HAI PERSO 😢";
+        resultTitle.className = "text-xl md:text-2xl font-black uppercase tracking-wider text-rose-300 drop-shadow-md";
+        resultPayout.textContent = `-${currentBet} $`;
+        resultPayout.className = "text-sm font-extrabold tracking-widest uppercase text-rose-200 bg-rose-950/60 border border-rose-500/30 px-4 py-1 rounded-full";
       }
 
       localStorage.setItem('bj_wins', totalWins);
